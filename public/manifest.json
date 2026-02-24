@@ -1,7 +1,7 @@
 {
   "name": "MATHWHIZ - Smart Math Solver",
   "short_name": "MATHWHIZ",
-  "description": "An AI-powered math companion for solving equations step-by-step with Photo and PDF support.",
+  "description": "An AI-powered math companion for solving equations step-by-step.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F5F5F5",
@@ -9,17 +9,32 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://picsum.photos/seed/math-app/192/192",
+      "src": "https://picsum.photos/seed/math-app-icon/192/192",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "https://picsum.photos/seed/math-app/512/512",
+      "src": "https://picsum.photos/seed/math-app-icon-512/512",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["education", "utilities", "productivity"]
+  "screenshots": [
+    {
+      "src": "https://picsum.photos/seed/math-ss-1/1080/1920",
+      "sizes": "1080x1920",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Mobile Solver Interface"
+    },
+    {
+      "src": "https://picsum.photos/seed/math-ss-2/1920/1080",
+      "sizes": "1920x1080",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Desktop Dashboard"
+    }
+  ]
 }
