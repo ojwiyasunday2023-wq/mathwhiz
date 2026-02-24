@@ -1,0 +1,40 @@
+
+{
+  "entities": {
+    "EquationEntry": {
+      "title": "Equation Entry",
+      "description": "A record of a solved equation or math problem.",
+      "type": "object",
+      "properties": {
+        "equation": { "type": "string" },
+        "stepByStepSolution": { "type": "string" },
+        "finalAnswer": { "type": "string" },
+        "timestamp": { "type": "object", "description": "Firestore server timestamp" }
+      },
+      "required": ["equation", "finalAnswer"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User specific configuration and metadata.",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "lastActive": { "type": "object" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "The user's profile document."
+    },
+    "/users/{userId}/history/{entryId}": {
+      "schema": "EquationEntry",
+      "description": "Individual equation solving history records for the user."
+    }
+  }
+}

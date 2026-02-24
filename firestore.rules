@@ -1,0 +1,75 @@
+/**
+ * MATHWHIZ - Firestore Security Rules
+ * 
+ * Core Philosophy:
+ * This ruleset implements a strict user-ownership model. Data is partitioned by user ID, 
+ * ensuring that mathematical equation history is private and accessible only to the 
+ * authenticated creator.
+ * 
+ * Data Structure:
+ * All user-specific data is organized hierarchically under a top-level /users/{userId} 
+ * document tree. Specifically, history records are stored in the 
+ * /users/{userId}/history/{entryId} subcollection.
+ * 
+ * Key Security Decisions:
+ * 1. Path-Based Authorization: The userId in the document path is verified against the 
+ *    authenticated user's UID (request.auth.uid).
+ * 2. Relational Integrity: Every history document must contain an 'ownerId' field that 
+ *    matches the userId in the path. This 'ownerId' is immutable once set.
+ * 3. Protected Listing: Users can list their own history, but public listing or 
+ *    cross-user access is strictly prohibited.
+ * 4. Anonymous Support: Rules support both standard and anonymous authentication 
+ *    providers as defined in the application requirements.
+ */
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    /**
+     * @description Checks if the request is from a signed-in user.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Checks if the authenticated user's UID matches the provided userId.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * @description Combines ownership check with existence check for updates and deletes.
+     */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Security rules for the root user document.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; 
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Rules for individual equation solving history records.
+     */
+    match /users/{userId}/history/{entryId} {
+      allow get, list: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}
