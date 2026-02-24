@@ -93,12 +93,36 @@ export default function MathWhiz() {
   }, [user, cloudHistory, localHistory]);
 
   const handleLogin = async () => {
-    if (!auth) return;
+    if (!auth) {
+      toast({ variant: "destructive", title: "Error", description: "Firebase Auth not initialized." });
+      return;
+    }
+    
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      
+      await signInWithPopup(auth, provider);
       setIsGuestMode(false);
+      toast({ title: "Welcome!", description: "Successfully signed in with Google." });
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Login Failed", description: error.message });
+      console.error("Login Error Details:", error);
+      let message = error.message;
+      
+      // Handle common Firebase Auth errors specifically for the user
+      if (error.code === 'auth/unauthorized-domain') {
+        message = "LOGIN BLOCKED: Your Vercel URL is not authorized in Firebase. Go to Firebase Console > Auth > Settings > Authorized Domains and add your link.";
+      } else if (error.code === 'auth/popup-blocked') {
+        message = "POPUP BLOCKED: Your browser blocked the sign-in window. Please allow popups for this site.";
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        message = "Sign-in was cancelled or the window was closed.";
+      }
+      
+      toast({ 
+        variant: "destructive", 
+        title: "Sign In Failed", 
+        description: message 
+      });
     }
   };
 
@@ -106,6 +130,7 @@ export default function MathWhiz() {
     if (!auth) return;
     await signOut(auth);
     setIsGuestMode(false);
+    toast({ description: "Signed out successfully." });
   };
 
   const handleShareApp = () => {
