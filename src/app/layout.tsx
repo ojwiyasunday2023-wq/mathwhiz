@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: 'MATHWHIZ - Smart Math Solver',
   description: 'An AI-powered math companion for solving equations step-by-step. Now featuring Photo Scanning and PDF/Document support!',
   manifest: '/manifest.json',
+  applicationName: 'MATHWHIZ',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -36,7 +37,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-        <link rel="apple-touch-icon" href="https://picsum.photos/seed/math-app/192/192" />
+        <link rel="apple-touch-icon" href="https://placehold.co/192x192/3F51B5/FFFFFF/png?text=Math" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
